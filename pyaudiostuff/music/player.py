@@ -4,8 +4,8 @@ import pyaudio
 import numpy as np
 from scipy.io import wavfile
 
-from . import tone
-from . import constants
+from music import tone
+from music import constants
 
 SIZES = {1: np.uint8, 2: np.int16, 4: np.int32, 8: np.int64}
 
@@ -46,9 +46,9 @@ def play_wav(filename):
 
     f = wave.open(filename, "rb")
     p = pyaudio.PyAudio()
-    print(f.getsampwidth())
+    print("width", f.getsampwidth())
     nframes = f.getnframes()
-    print(f.getframerate())
+    print("frames", f.getframerate())
     stream = p.open(format=p.get_format_from_width(f.getsampwidth()),
                     channels=f.getnchannels(),
                     rate=f.getframerate(),

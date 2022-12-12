@@ -13,7 +13,7 @@ def start_client(connection_id=20):
     alsaseq.connectfrom(0, connection_id, 0)
 
 
-class RawNote(object):
+class RawMidiNote(object):
     def __init__(self, start, piano_key, velocity, dampened=False, end=None):
         self.dampened = dampened
         self.piano_key = piano_key
@@ -30,10 +30,12 @@ SUSTAIN_PEDAL = 64
 MIDDLE_PEDAL = 66
 DAMPEN_PEDAL = 67
 
+
 class LiveListener(object):
     def __init__(self, connection_id=20):
         start_client(connection_id)
-        self.notes = []  # type:list[RawNote]
+        self.notes = []  # type:list[RawMidiNote]
+        self.pedal_events = []
         self.dampened = False
         self.sounding_notes = {}
         self.sustained_notes = {}
@@ -57,7 +59,7 @@ class LiveListener(object):
                 note = self.sounding_notes.pop(key)
                 note.end = time.time()
             else:
-                note = RawNote(time.time(), key, velocity, self.dampened)
+                note = RawMidiNote(time.time(), key, velocity, self.dampened)
                 self.sounding_notes[key] = note
                 self.notes.append(note)
                 if self.sustain:
@@ -66,6 +68,7 @@ class LiveListener(object):
                     self.mid_sustained_notes[key] = note
         elif typ == PEDAL_PRESSED:
             pedal, depressed = event[-1][-2:]
+            self.pedal_events.append((pedal, depressed, time.time()))
             if pedal == DAMPEN_PEDAL:
                 self.dampened = bool(depressed)
             elif pedal == MIDDLE_PEDAL:

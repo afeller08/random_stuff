@@ -3,14 +3,14 @@ import math
 
 
 class Harmonics(object):
-    simple = {i:1/i for i in range(1, 11)}
-    decayed = {i:1/i ** 2 for i in range(1, 11)}
-    exp_decayed = {i:1/(2 ** i) for i in range(1, 11)}
-    negradius = {.9992 ** (i -1) * i:1/(2 * 1.7**i) for i in range(1, 11)}
-    inharmonic = {1.0008 ** (i -1) * i:1/(1.65**i) for i in range(1, 11)}
-    inharmonic2 = {1.00081 ** (i -1) * i:1/(1.75 **i) for i in range(1, 11)}
-    inharmonic3 = {1.00083 ** (i -1) * i:1/(1.71 **i) for i in range(1, 11)}
-    percussive = {1.6 ** (i -1) * i:1/(2**i) for i in range(1, 11)}
+    simple = {i: 1/i for i in range(1, 11)}
+    decayed = {i: 1/i ** 2 for i in range(1, 11)}
+    exp_decayed = {i: 1/(2**i) for i in range(1, 11)}
+    negradius = {.9992 ** (i-1) * i: 1/(2 * 1.7**i) for i in range(1, 11)}
+    inharmonic = {1.0008 ** (i-1) * i: 1/(1.65**i) for i in range(1, 11)}
+    inharmonic2 = {1.00081 ** (i-1) * i: 1/(1.75**i) for i in range(1, 11)}
+    inharmonic3 = {1.00083 ** (i-1) * i: 1/(1.71**i) for i in range(1, 11)}
+    percussive = {1.6 ** (i-1) * i: 1/(2**i) for i in range(1, 11)}
 
 
 class EqualTempered(Enum):
@@ -32,18 +32,21 @@ class EqualTempered(Enum):
 
 def single_note(position, value):
     v = position * ((), ) + (value, ) + (11 - position) * ((), )
-    return (v, )
+    return v,
+
 
 HARMONIC_FIE = (11, 8)
+
 
 equal_ratios = (tuple((_.value/261.625, 1) for _ in EqualTempered), )
 symmetric_la = single_note(9, (27, 16))
 harmonic_la = single_note(9, (13, 8))
 subharmonic_ma = single_note(3, (7, 6))
 subharmonic_fa = single_note(4, (4, 3))
-harmonic_ratios = (((1,1), (), (9, 8), (7, 6), (5, 4),  (), (), (3, 2), (), (), (7, 4), (15, 8)), )
-minor_ratios = (((1,1), (28, 27), (9, 8), (7, 6), (5, 4),  (4, 3),
-                      (17, 12), (3, 2), (14, 9), (27, 16), (7, 4), (15, 8)), )
+harmonic_ratios = (((1, 1), (), (9, 8), (7, 6), (5, 4),  (), (),
+                    (3, 2), (), (), (7, 4), (15, 8)), )
+minor_ratios = (((1, 1), (28, 27), (9, 8), (7, 6), (5, 4),  (4, 3),
+                 (17, 12), (3, 2), (14, 9), (27, 16), (7, 4), (15, 8)), )
 
 pentatonic_ratios = (tuple(
     (
@@ -121,7 +124,3 @@ class WesternTuning(object):
     def __getattr__(self, item):
         return self[item]
 
-
-class PianoTuning(WesternTuning):
-    def __getitem__(self, key_number):
-        return self.pitches[(key_number - 1)% 12] * 2 ** ((key_number - 40)//12)

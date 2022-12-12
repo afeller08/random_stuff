@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from player import constants
+from music import constants
 from utils import decorator
 
 
@@ -24,18 +24,18 @@ class BaseNoteObject(object):
         return self.note * 2 ** (self.octave - 3)
 
 
-class WesternNote(BaseNoteObject):
+class _BNO(BaseNoteObject):
     tuning = constants.WesternTuning('G', constants.minor_ratios, renormalization='G')
 
     def __init__(self, name, octave, duration=1, denom=1):
         self.name = name
-        super(WesternNote, self).__init__(self.tuning[name], octave, duration=duration, denom=denom)
+        super(_BNO, self).__init__(self.tuning[name], octave, duration=duration, denom=denom)
 
     def distance(self, other):
         pass
 
 
-class MusicLineNote(WesternNote, metaclass=WmlnMeta):
+class NamedTone(_BNO, metaclass=WmlnMeta):
 
     def __mul__(self, other):
         self.duration *= other
@@ -53,7 +53,7 @@ class MusicLineNote(WesternNote, metaclass=WmlnMeta):
         return MusicLine([self, other])
 
 
-N = MusicLineNote
+N = NamedTone
 
 
 class MusicLine(object):
@@ -61,7 +61,7 @@ class MusicLine(object):
         self.notes = notes
 
     def __add__(self, other):
-        if isinstance(other, MusicLineNote):
+        if isinstance(other, NamedTone):
             self.notes.append(other)
         else:
             self.notes.extend(other)
