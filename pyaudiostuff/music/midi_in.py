@@ -1,6 +1,7 @@
 import alsaseq
 import time
 import pandas as pd
+import pydantic
 
 from utils.decorator import memoize
 
@@ -13,13 +14,12 @@ def start_client(connection_id=20):
     alsaseq.connectfrom(0, connection_id, 0)
 
 
-class RawMidiNote(object):
-    def __init__(self, start, piano_key, velocity, dampened=False, end=None):
-        self.dampened = dampened
-        self.piano_key = piano_key
-        self.velocity = velocity
-        self.start = start
-        self.end = end
+class RawMidiNote(pydantic.BaseModel):
+    start: float
+    piano_key: int
+    velocity: int
+    dampened: bool = False
+    end: float = None
 
 
 NOTE_PLAYED = 6
@@ -59,7 +59,8 @@ class LiveListener(object):
                 note = self.sounding_notes.pop(key)
                 note.end = time.time()
             else:
-                note = RawMidiNote(time.time(), key, velocity, self.dampened)
+                note = RawMidiNote(start=time.time(), piano_key=key, velocity=velocity, dampened=self.dampened)
+                print(note)
                 self.sounding_notes[key] = note
                 self.notes.append(note)
                 if self.sustain:

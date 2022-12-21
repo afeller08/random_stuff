@@ -1,0 +1,70 @@
+Sheet Music is a 2d visual stream of Notes
+Sheet Music is divided horizontally into Measures
+Sheet Music is divided vertically into Cleffs
+
+a Beat exists
+a Beat's Time specifically determines which Beat it is
+
+each Note has a Beat, a Pitch, a Voice, and a Duration
+each Beat may have several Notes
+
+a Note's Voice determines its Cleff
+
+each Beat has a Stem
+a Beat's Stem is an abstraction
+a Beat's Stem associates its Time with an x-cordinate
+for Beats a and b:
+    a.time < b.time => a.stem.x < b.stem.x
+
+a Note is drawn 
+a Note is drawn with a Body, a Stem, and a Tail
+a Note's Body is always drawn
+a Note is also drawn with Punctuation
+a Note's Punctuation comes in different kinds
+a Note may have several kinds of Punctuation
+a Note's Body, Stem, Tail, and Punctuation belong to the note
+
+padding separates a Note from its Punctuation
+padding does not separate a Note from its Stem
+a Note's Stem is connected to its Tail
+for Note a:
+    !a.stem => !a.tail
+
+a Note's Stem instatiates its Beat's Stem
+for Note a:
+    (a.body.left == a.stem.x) || (a.body.right == a.stem.x)
+    (a.body.y == a.stem.bottom) || (a.body.y == a.stem.top)
+for Notes a and b:
+    a.stem.x < b.stem.x => a.right <= b.left
+    a.stem.x < b.stem.x => a.body.right < b.body.left
+
+Notes come in differrent kinds
+a Note's Duration determines the kind of Note
+a Grace Note is a kind of note
+all Grace Notes's Bodies have the same widths as each other
+all Grace Notes's Bodies have the same height as each other
+a Quarter Note is a kind of note
+all Quarter Notes have the same widths as each other
+all Quarter Notes have the same height as each other
+a Half Note is a kind of note
+all Half Notes's Bodies have the same widths as a Quarter Note's
+all Half Notes's Bodies have the same height as a Quarter Note's
+there are other kinds of Notes
+all other kinds of Notes's Bodies have the same width as a Quarter Note's
+all other kinds of Notes's Bodies have the same height as a Quarter Note's
+
+a Note's Pitch determines its y-center
+for Notes a and b:
+    a.pitch < b.pitch => a.y <= b.y
+
+a Note's Pitch may give it the following kinds of Punctuation:
+    Sharp
+    Double Sharp
+    Double Flat
+    Flat
+    Natural
+these kinds of Punctuation are called Pitch Modifiers
+each kind of Pitch Modifier has its own symbol
+
+a Note may only have 
+Pitch Modifiers are drawn
